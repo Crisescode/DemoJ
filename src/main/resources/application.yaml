@@ -1,0 +1,24 @@
+spring:
+  # 数据库基础配置（核心）
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/demodb?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: demo_user       # 你的数据库账号
+    password: 123456     # 你的数据库密码
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  configuration:
+    # MyBatis 配置
+    map-underscore-to-camel-case: true
+    # 开发阶段开启 SQL 日志（可选）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    # 全局配置
+    db-config:
+      # 数据库配置
+      id-type: auto
+
+jwt:
+  secret: 123456
+  expiration: 604800
+  tokenHead: Bearer
