@@ -110,7 +110,7 @@ public class JwtTokenUtils {
      */
     public String generateToken(UserEntity userEntity) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, userEntity.getName());
+        claims.put(CLAIM_KEY_USERNAME, userEntity.getUsername());
         claims.put(CLAIM_KEY_CREATED, new Date());
 
         log.info("=== secret：{}", secret);

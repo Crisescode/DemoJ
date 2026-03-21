@@ -30,12 +30,9 @@ public class UserService {
 
         // 没有则注册
         UserEntity newUser = new UserEntity();
-        newUser.setName(req.getUsername());
+        newUser.setUsername(req.getUsername());
         newUser.setPassword(req.getPassword());
-        newUser.setPhone(req.getPhone());
         newUser.setEmail(req.getEmail());
-        newUser.setNameCn(req.getNameCN());
-        newUser.setSex(req.getSex());
 
         int rows = userMapper.insert(newUser);
 
