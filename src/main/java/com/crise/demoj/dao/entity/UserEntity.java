@@ -26,16 +26,13 @@ public class UserEntity {
     private String email;
 
     @TableField("nick_name")
-    private String nick_name;
+    private String nickName;
 
     @TableField("note")
     private String note;
 
-    @TableField("create_time")
-    private DateTime create_time;
-
     @TableField("login_time")
-    private DateTime login_time;
+    private DateTime loginTime;
 
     @TableField("status")
     private Integer status;

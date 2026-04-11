@@ -41,21 +41,21 @@ public class JwtTokenUtils {
                 .compact();
     }
 
-//    /**
-//     * 从token中获取JWT中的负载
-//     */
-//    private Claims getClaimsFromToken(String token) {
-//        Claims claims = null;
-//        try {
-//            claims = Jwts.parser()
-//                    .setSigningKey(secret)
-//                    .parseClaimsJws(token)
-//                    .getBody();
-//        } catch (Exception e) {
-//            log.info("JWT格式验证失败:{}", token);
-//        }
-//        return claims;
-//    }
+    /**
+     * 从token中获取JWT中的负载
+     */
+    private Claims getClaimsFromToken(String token) {
+        Claims claims = null;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            log.error("JWT格式验证失败:{}", token);
+        }
+        return claims;
+    }
 
     /**
      * 生成token的过期时间
@@ -64,30 +64,22 @@ public class JwtTokenUtils {
         return new Date(System.currentTimeMillis() + expiration * 1000);
     }
 
-//    /**
-//     * 从token中获取登录用户名
-//     */
-//    public String getUserNameFromToken(String token) {
-//        String username;
-//        try {
-//            Claims claims = getClaimsFromToken(token);
-//            username = claims.getSubject();
-//        } catch (Exception e) {
-//            username = null;
-//        }
-//        return username;
-//    }
-
     /**
-     * 验证token是否还有效
-     *
-     * @param token       客户端传入的token
-     * @param userDetails 从数据库中查询出来的用户信息
+     * 从token中获取登录用户名
      */
-//    public boolean validateToken(String token, UserDetails userDetails) {
-//        String username = getUserNameFromToken(token);
-//        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-//    }
+    public String getUserNameFromToken(String token) {
+        if (token == null)
+            return null;
+
+        String username;
+        try {
+            Claims claims = getClaimsFromToken(token);
+            username = claims.getSubject();
+        } catch (Exception e) {
+            username = null;
+        }
+        return username;
+    }
 
 //    /**
 //     * 判断token是否已经失效

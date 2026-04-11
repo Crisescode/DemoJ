@@ -31,9 +31,9 @@ package com.crise.demoj.controller;
 // 6. 用户查询
 // 7. 用户列表查询
 
-import com.crise.demoj.dto.ResultDto;
-import com.crise.demoj.dto.UserLoginRequestDto;
-import com.crise.demoj.dto.UserRegisterRequestDto;
+import com.crise.demoj.dto.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,12 +41,14 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.crise.demoj.service.UserService;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/v1/app/user")
+@RequestMapping("/admin")
+@Tag(name = "用户管理", description = "用户注册、登录、增删改查接口")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -54,16 +56,10 @@ public class UserController {
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
+    @Operation(summary = "用户注册")
     @PostMapping("/register")
-    public ResultDto<Map<String, String>> register(@RequestBody UserRegisterRequestDto req) {
+    public ResultDto<Map<String, String>> register(@Valid @RequestBody UserRegisterRequestDto req) {
         try {
-            if(req.getUsername().length() > 32) {
-                throw new RuntimeException("用户名长度不能超过32个字符");
-            }
-            if(req.getPassword().length() > 64) {
-                throw new RuntimeException("密码长度不能超过64个字符");
-            }
-
             userService.register(req);
         } catch (Exception e) {
             log.error("注册失败", e);
@@ -75,11 +71,9 @@ public class UserController {
         return ResultDto.success(response);
     }
 
-    // 1. 查用户是否存在
-    // 2. 存在则验证密码是否正确
-    // 3. 正确则生成 jwt token
+    @Operation(summary = "用户登录", description = "登录成功后返回 JWT token")
     @PostMapping("/login")
-    public ResultDto<Map<String, String>> login(@RequestBody UserLoginRequestDto req) {
+    public ResultDto<Map<String, String>> login(@Valid @RequestBody UserLoginRequestDto req) {
         String token = userService.login(req);
         if (token == null) {
             throw new RuntimeException("登录失败");
@@ -93,18 +87,30 @@ public class UserController {
         return ResultDto.success(response);
     }
 
-//    @PostMapping("/get")
-//    public ResultDto<UserDto> getUser(@RequestBody UserGetRequestDto req) {
-//        return ResultDto.success(userService.getUser(req));
-//    }
-//
-//    @PostMapping("/update")
-//    public ResultDto<Map<String, String>> updateUser(@RequestBody UserUpdateRequestDto req) {
-//
-//    }
-//
-//    @PostMapping("/delete")
-//    public ResultDto<Map<String, String>> deleteUser(@RequestBody UserDeleteRequestDto req) {
-//
-//    }
+    @Operation(summary = "查询用户信息")
+    @PostMapping("/info")
+    public ResultDto<UserInfoDto> getUserInfo(@Valid @RequestBody UserGetRequestDto req) {
+        return ResultDto.success(userService.getUserByName(req.getUsername()));
+    }
+
+    @Operation(summary = "更新用户信息")
+    @PostMapping("/update")
+    public ResultDto<UserInfoDto> updateUser(@Valid @RequestBody UserUpdateRequestDto req) {
+        return ResultDto.success(userService.updateUser(req));
+    }
+
+    @Operation(summary = "删除用户")
+    @PostMapping("/delete")
+    public ResultDto<Map<String, String>> deleteUser(@Valid @RequestBody UserDeleteRequestDto req) {
+        userService.deleteUser(req.getUsername());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "删除成功");
+        return ResultDto.success(response);
+    }
+
+    @Operation(summary = "用户列表（分页）")
+    @PostMapping("/list")
+    public ResultDto<CommonPage<UserInfoDto>> listUser(@Valid @RequestBody UserListRequestDto req) {
+        return ResultDto.success(userService.listUsers(req));
+    }
 }

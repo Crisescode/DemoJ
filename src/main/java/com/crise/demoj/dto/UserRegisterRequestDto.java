@@ -1,25 +1,34 @@
 package com.crise.demoj.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import lombok.Data;
 
 @Data
 public class UserRegisterRequestDto {
-    @JsonProperty("user_name")
+    @NotEmpty(message = "用户名不能为空")
+    @Size(max = 32, message = "用户名长度不能大于32")
+    @JsonProperty("username")
     private String username;
 
+    @NotEmpty
     @JsonProperty("password")
     private String password;
 
-    @JsonProperty("phone_number")
-    private String phone;
+    @JsonProperty("icon")
+    private String icon;
 
+    @Email
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("name_cn")
-    private String nameCN;
+    @JsonProperty("nick_name")
+    private String nickName;
 
-    @JsonProperty("sex")
-    private Integer sex;
+    @JsonProperty("note")
+    private String note;
 }

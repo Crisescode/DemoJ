@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 public interface UserMapper extends BaseMapper<UserEntity> {
-    @Select("select * from ums_admin where username = #{name} and status = 0")
+    @Select("select * from ums_admin where username = #{name} and status = 1")
     UserEntity selectByName(@Param("name") String name);
 }
