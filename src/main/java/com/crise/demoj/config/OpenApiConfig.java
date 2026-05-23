@@ -16,7 +16,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("demoJ API")
-                        .description("用户模块接口文档")
+                        .description("demoJ 项目接口文档")
                         .version("1.0.0"))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer"))
                 .components(new Components()

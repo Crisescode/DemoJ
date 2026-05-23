@@ -1,4 +1,4 @@
-package com.crise.demoj.dto;
+package com.crise.demoj.dto.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.Data;

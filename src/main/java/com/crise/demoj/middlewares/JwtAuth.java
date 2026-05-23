@@ -27,6 +27,7 @@ public class JwtAuth implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestURI = request.getRequestURI();
         log.info("requestURI:{}", requestURI);
+        log.info("request: {}", request.getHeader("Authorization"));
 
         // 1. 获取 token
         String token = request.getHeader("token");

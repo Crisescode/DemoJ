@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crise.demoj.dao.entity.UserEntity;
 import com.crise.demoj.dto.*;
+import com.crise.demoj.dto.api.CommonPage;
+import com.crise.demoj.dto.api.ResultCode;
+import com.crise.demoj.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +15,8 @@ import com.crise.demoj.dao.mapper.UserMapper;
 import com.crise.demoj.utils.JwtTokenUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,7 +32,7 @@ public class UserService {
         // 查询是否有该用户
         UserEntity user = userMapper.selectByName(req.getUsername());
         if (user != null) {
-            throw new RuntimeException("用户已存在");
+            throw new UserException(ResultCode.USER_FAILED, "用户已存在");
         }
 
         // 没有则注册
@@ -117,7 +120,7 @@ public class UserService {
     public void deleteUser(String userName) {
         UserEntity user = userMapper.selectByName(userName);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new UserException("用户不存在");
         }
 
         // 硬删除：真实把数据库对应 id 行数的数据删除
@@ -132,13 +135,23 @@ public class UserService {
 
     public CommonPage<UserInfoDto> listUsers(UserListRequestDto req) {
         Page<UserEntity> page = new Page<>(req.getPageNum(), req.getPageSize());
+
         IPage<UserEntity> userPage = userMapper.selectPage(page, null);
 
-        List<UserInfoDto> userInfos = userPage.getRecords().stream().map(user -> {
+        List<UserEntity> users = userPage.getRecords();
+        List<UserInfoDto> userInfos = new ArrayList<>();
+        for(UserEntity user : users) {
             UserInfoDto dto = new UserInfoDto();
             BeanUtils.copyProperties(user, dto);
-            return dto;
-        }).collect(Collectors.toList());
+            userInfos.add(dto);
+        }
+
+
+//        List<UserInfoDto> userInfos = userPage.getRecords().stream().map(user -> {
+//            UserInfoDto dto = new UserInfoDto();
+//            BeanUtils.copyProperties(user, dto);
+//            return dto;
+//        }).collect(Collectors.toList());
 
         Page<UserInfoDto> dtoPage = new Page<>(userPage.getCurrent(), userPage.getSize(), userPage.getTotal());
         dtoPage.setRecords(userInfos);
