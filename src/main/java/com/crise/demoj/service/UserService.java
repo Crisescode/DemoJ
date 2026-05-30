@@ -28,6 +28,9 @@ public class UserService {
     @Autowired
     private JwtTokenUtils jwtTokenUtils;
 
+    @Autowired
+    private UserRoleMapService userRoleMapService;
+
     public void register(UserRegisterRequestDto req) {
         // 查询是否有该用户
         UserEntity user = userMapper.selectByName(req.getUsername());
@@ -157,5 +160,18 @@ public class UserService {
         dtoPage.setRecords(userInfos);
 
         return CommonPage.fromPage(dtoPage);
+    }
+
+    public int updateRole(Long userId, List<Long> roleIds) {
+        // 1. 删除原来的关联关系
+        userRoleMapService.deleteByUserId(userId);
+
+        // 2. 创建新的关联关系
+        int c = userRoleMapService.create(userId, roleIds);
+        return c;
+    }
+
+    public List<UserRoleInfoDto> getRoleList(Long userId) {
+        return null;
     }
 }

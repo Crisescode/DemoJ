@@ -31,6 +31,7 @@ public class JwtAuth implements HandlerInterceptor {
 
         // 1. 获取 token
         String token = request.getHeader("token");
+        log.info("token: {}", token);
         if (token == null) {
             throw new RuntimeException("jwt token 不存在");
         }

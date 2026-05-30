@@ -1,5 +1,6 @@
 package com.crise.demoj.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crise.demoj.dto.*;
 import com.crise.demoj.dto.api.CommonResult;
 import com.crise.demoj.service.UserRoleService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -41,9 +43,27 @@ public class UserRoleController {
         return CommonResult.success(userRoleService.deleteById(req.getId()));
     }
 
-//    @Operation(summary = "修改角色")
-//    @PostMapping("/update")
-//    public ResultDto<UserRoleInfoDto> update(@Valid @RequestBody UserRoleUpdateRequestDto req) {
-//        return ResultDto.success(userRoleService.update(req));
+    @Operation(summary = "修改角色")
+    @PostMapping("/update")
+    public CommonResult<UserRoleInfoDto> update(@Valid @RequestBody UserRoleUpdateRequestDto req) {
+        return CommonResult.success(userRoleService.update(req));
+    }
+//
+//    @Operation(summary = "批量删除角色")
+//    @PostMapping("/list")
+//    public CommonResult<HashMap<String, String>> deleteAll(@Valid @RequestBody UserRoleDeleteAllRequestDto req) {
+//        return CommonResult.success(userRoleService.deleteAll(req.getIds()));
+//    }
+//
+//    @Operation(summary = "获取所有角色")
+//    @PostMapping("/listAll")
+//    public CommonResult<List<UserRoleInfoDto>> list(@Valid @RequestBody UserRoleListRequestDto req) {
+//        return CommonResult.success(userRoleService.listAll(req));
+//    }
+//
+//    @Operation(summary = "角色列表，支持分页，筛选，排序")
+//    @PostMapping("/list")
+//    public CommonResult<Page<UserRoleInfoDto>> list(@Valid @RequestBody UserRoleListRequestDto req) {
+//        return CommonResult.success(userRoleService.list(req));
 //    }
 }

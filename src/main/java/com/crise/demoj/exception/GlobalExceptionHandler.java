@@ -2,6 +2,7 @@ package com.crise.demoj.exception;
 
 import com.crise.demoj.dto.api.CommonResult;
 import com.crise.demoj.dto.api.ResultCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ResponseBody
@@ -52,6 +54,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = RuntimeException.class)
     public CommonResult handleRuntimeException(RuntimeException e) {
+        log.error("RuntimeException error: ", e);
         return CommonResult.failed(ResultCode.FAILED);
     }
 }
