@@ -119,12 +119,10 @@ public class UserController {
         return CommonResult.success(count);
     }
 
-    @Operation(summary = "获取指定用户的角色")  // Describes the operation's purpose in Swagger documentation
-    @RequestMapping(value = "/role/{userId}", method = RequestMethod.GET)  // Maps to HTTP GET requests at /role/{userId}
-    @ResponseBody  // Indicates the method's return value should be serialized directly into the response body
-    public CommonResult<List<UserRoleInfoDto>> getRoleList(@PathVariable Long userId) {  // Method that retrieves role list for a specific user
-        List<UserRoleInfoDto> roleList = userService.getRoleList(userId);  // Call service method to get the role list
-        return CommonResult.success(roleList);  // Return success response with the role list
+    @Operation(summary = "获取指定用户的角色")
+    @GetMapping(value = "/role/{userId}")
+    public CommonResult<List<UserRoleInfoDto>> getRoleList(@PathVariable Long userId) {
+        List<UserRoleInfoDto> roleList = userService.getRoleList(userId);
+        return CommonResult.success(roleList);
     }
-
 }

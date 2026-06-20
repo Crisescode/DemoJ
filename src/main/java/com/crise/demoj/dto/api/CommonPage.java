@@ -1,16 +1,20 @@
 package com.crise.demoj.dto.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 public class CommonPage<T> {
+    @JsonProperty("page_num")
     private Integer pageNum;
 
+    @JsonProperty("page_size")
     private Integer pageSize;
 
+    @JsonProperty("total_page")
     private Integer totalPage;
 
     private Long total;

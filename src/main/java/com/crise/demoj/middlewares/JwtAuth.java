@@ -1,6 +1,8 @@
 package com.crise.demoj.middlewares;
 
 import com.crise.demoj.dto.UserInfoDto;
+import com.crise.demoj.dto.api.ResultCode;
+import com.crise.demoj.exception.UserException;
 import com.crise.demoj.service.UserService;
 import com.crise.demoj.utils.JwtTokenUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -10,9 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-// 1. URL, HEADER, PARAMETER, COOKIE
-// bean
 
 @Component
 @Slf4j
@@ -42,13 +41,13 @@ public class JwtAuth implements HandlerInterceptor {
         // 验证 jwt token
         String userName = jwtTokenUtils.getUserNameFromToken(realToken);
         if (userName == null) {
-            throw new RuntimeException("jwt token 验证失败");
+            throw new UserException(ResultCode.UNAUTHORIZED, "jwt token 验证失败");
         }
 
         // 验证用户是否存在，防止造 token
         UserInfoDto user = userService.getUserByName(userName);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new UserException(ResultCode.USER_FAILED, "用户不存在");
         }
 
         // 将用户信息放入 request 中

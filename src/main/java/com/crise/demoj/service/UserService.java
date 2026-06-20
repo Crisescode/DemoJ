@@ -1,5 +1,6 @@
 package com.crise.demoj.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crise.demoj.dao.entity.UserEntity;
@@ -30,6 +31,9 @@ public class UserService {
 
     @Autowired
     private UserRoleMapService userRoleMapService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     public void register(UserRegisterRequestDto req) {
         // 查询是否有该用户
@@ -139,7 +143,9 @@ public class UserService {
     public CommonPage<UserInfoDto> listUsers(UserListRequestDto req) {
         Page<UserEntity> page = new Page<>(req.getPageNum(), req.getPageSize());
 
-        IPage<UserEntity> userPage = userMapper.selectPage(page, null);
+        IPage<UserEntity> userPage = userMapper.selectPage(page,
+                new QueryWrapper<UserEntity>().eq("status", 1)
+        );
 
         List<UserEntity> users = userPage.getRecords();
         List<UserInfoDto> userInfos = new ArrayList<>();
@@ -172,6 +178,10 @@ public class UserService {
     }
 
     public List<UserRoleInfoDto> getRoleList(Long userId) {
-        return null;
+        // 1. 获取用户对应的所有角色ID
+        List<Long> roleIds = userRoleMapService.getRoleIdsByUserId(userId);
+        // 2. 获取所有角色信息
+        List<UserRoleInfoDto> resp = userRoleService.getAllByIds(roleIds);
+        return resp;
     }
 }

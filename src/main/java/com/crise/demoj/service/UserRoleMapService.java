@@ -1,6 +1,9 @@
 package com.crise.demoj.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.crise.demoj.dao.entity.UserEntity;
+import com.crise.demoj.dao.entity.UserRoleEntity;
 import com.crise.demoj.dao.entity.UserRoleMapEntity;
 import com.crise.demoj.dao.mapper.UserRoleMapMapper;
 import com.crise.demoj.dto.UserRoleInfoDto;
@@ -20,23 +23,35 @@ public class UserRoleMapService {
     @Resource
     private UserRoleMapMapper userRoleMapMapper;
 
-    @Autowired
-    private UserRoleService userRoleService;
+//    public List<UserRoleInfoDto> getRoleListByUserId(Long userId){
+//        // 1. 从关联表中查询到该用户关联了哪些角色
+//        List<Long> roleIds = userRoleMapMapper.getRoleIdByUserId(userId);
+//
+//        // 2. 根据角色id查询角色信息
+//        List<UserRoleInfoDto> resp = new ArrayList<>();
+//        for(Long roleId : roleIds) {
+//            log.info("roleId: {}", roleId);
+//            UserRoleInfoDto usrRoleInfo = userRoleService.getById(roleId);
+//            resp.add(usrRoleInfo);
+//        }
+//
+//        // 3. 返回
+//        return resp;
+//    }
 
-    public List<UserRoleInfoDto> getRoleListByUserId(Long userId){
-        // 1. 从关联表中查询到该用户关联了哪些角色
-        List<Long> roleIds = userRoleMapMapper.getRoleIdByUserId(userId);
-
-        // 2. 根据角色id查询角色信息
-        List<UserRoleInfoDto> resp = new ArrayList<>();
-        for(Long roleId : roleIds) {
-            log.info("roleId: {}", roleId);
-            UserRoleInfoDto usrRoleInfo = userRoleService.getById(roleId);
-            resp.add(usrRoleInfo);
+    public List<Long> getUserIdsByRoleId(Long roleId) {
+        // 1. 查询关联关系
+        List<UserRoleMapEntity> entities = userRoleMapMapper.selectList(
+                new UpdateWrapper<UserRoleMapEntity>()
+                        .eq("role_id", roleId)
+                        .eq("is_active", 1)
+        );
+        // 2. 获取角色ID
+        List<Long> userIds = new ArrayList<>();
+        for(UserRoleMapEntity entity : entities) {
+            userIds.add(entity.getUserId());
         }
-
-        // 3. 返回
-        return resp;
+        return userIds;
     }
 
     public int create(Long userId, List<Long> roleIds) {
@@ -64,5 +79,16 @@ public class UserRoleMapService {
         for(UserRoleMapEntity entity : entities) {
             userRoleMapMapper.deleteById(entity.getId());
         }
+    }
+
+    public List<Long> getRoleIdsByUserId(Long userId) {
+        // 1. 查询关联关系
+        List<UserRoleMapEntity> entities = userRoleMapMapper.getEntityByUserId(userId);
+        // 2. 获取角色ID
+        List<Long> roleIds = new ArrayList<>();
+        for(UserRoleMapEntity entity : entities) {
+            roleIds.add(entity.getRoleId());
+        }
+        return roleIds;
     }
 }
