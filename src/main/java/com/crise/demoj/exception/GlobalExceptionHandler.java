@@ -57,4 +57,11 @@ public class GlobalExceptionHandler {
         log.error("RuntimeException error: ", e);
         return CommonResult.failed(ResultCode.FAILED);
     }
+
+    @ResponseBody
+    @ExceptionHandler(value = Exception.class)
+    public CommonResult handleException(Exception e) {
+        log.error("Exception error: ", e);
+        return CommonResult.failed(ResultCode.FAILED);
+    }
 }

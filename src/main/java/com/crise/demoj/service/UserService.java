@@ -11,13 +11,16 @@ import com.crise.demoj.exception.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.crise.demoj.dao.mapper.UserMapper;
 import com.crise.demoj.utils.JwtTokenUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -32,6 +35,8 @@ public class UserService {
     @Autowired
     private UserRoleMapService userRoleMapService;
 
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Autowired
     private UserRoleService userRoleService;
 
@@ -45,7 +50,7 @@ public class UserService {
         // 没有则注册
         UserEntity newUser = new UserEntity();
         newUser.setUsername(req.getUsername());
-        newUser.setPassword(req.getPassword());
+        newUser.setPassword(passwordEncoder.encode(req.getPassword()));
         newUser.setIcon(req.getIcon());
         newUser.setEmail(req.getEmail());
         newUser.setNickName(req.getNickName());
@@ -61,28 +66,46 @@ public class UserService {
         }
     }
 
-    public String login(UserLoginRequestDto req) {
-        String token = null;
-
+    public Map<String, String> login(UserLoginRequestDto req) {
         // 1. 查询是否有该用户
         UserEntity user = userMapper.selectByName(req.getUsername());
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new UserException(ResultCode.USER_FAILED, "用户不存在");
         }
 
-        // 2. 比较密码
-        if (!user.getPassword().equals(req.getPassword())) {
-            throw new RuntimeException("密码错误");
+        // 2. 比较密码，兼容老数据密码
+        String storedPwd = user.getPassword();
+        if (storedPwd != null && storedPwd.startsWith("$2a$")) {
+            if (!passwordEncoder.matches(req.getPassword(), storedPwd)) {
+                throw new UserException(ResultCode.USER_FAILED, "密码错误");
+            }
+        } else {
+            if (!req.getPassword().equals(storedPwd)) {
+                throw new UserException(ResultCode.USER_FAILED, "密码错误");
+            }
+
+            user.setPassword(passwordEncoder.encode(req.getPassword()));
+            userMapper.updateById(user);
         }
 
+        // 3. 生成 access token
+        String token;
         try {
-            // 3. 生成token
             token = jwtTokenUtils.generateToken(user);
         } catch (Exception e) {
             log.warn("登录异常:{}", e.getMessage());
+            return null;
         }
 
-        return token;
+        Map<String, String> result = new HashMap<>();
+        result.put("token", token);
+        result.put("message", "登录成功");
+
+        return result;
+    }
+
+    public UserEntity getUserByNameEntity(String userName) {
+        return userMapper.selectByName(userName);
     }
 
     public UserInfoDto getUserByName(String userName) {

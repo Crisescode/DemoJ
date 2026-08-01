@@ -20,5 +20,6 @@ mybatis-plus:
 
 jwt:
   secret: 123456
-  expiration: 604800
+  accessExpiration: 604800    # access token 有效期：7 天
+  refreshThreshold: 300       # 距过期剩余多少秒时自动续期（默认5分钟）
   tokenHead: Bearer
