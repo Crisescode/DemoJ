@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = UserException.class)
     public CommonResult handle(UserException e) {
-        if(e.getErrorCode() != null) {
+        if (e.getErrorCode() != null) {
             return CommonResult.failed(e.getErrorCode(), e.getMessage());
         }
         return CommonResult.failed(e.getErrorCode(), e.getMessage());

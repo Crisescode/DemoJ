@@ -25,7 +25,6 @@ import java.util.Map;
 @Slf4j
 @Service
 public class UserService {
-
     @Resource
     private UserMapper userMapper;
 

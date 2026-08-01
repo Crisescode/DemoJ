@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 public class OperationLogService {
-
     @Resource
     private OperationLogMapper operationLogMapper;
 
