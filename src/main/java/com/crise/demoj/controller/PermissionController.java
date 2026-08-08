@@ -25,7 +25,6 @@ import java.util.Map;
 @RequestMapping("/permission")
 @Tag(name = "权限管理", description = "后台权限资源管理接口")
 public class PermissionController {
-
     @Autowired
     private PermissionService permissionService;
 

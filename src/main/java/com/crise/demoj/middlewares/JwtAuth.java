@@ -30,9 +30,6 @@ public class JwtAuth implements HandlerInterceptor {
     @Autowired
     private PermissionService permissionService;
 
-    @Autowired
-    private UserRoleMapService userRoleMapService;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestURI = request.getRequestURI();

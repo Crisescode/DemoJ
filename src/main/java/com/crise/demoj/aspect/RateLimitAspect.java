@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 public class RateLimitAspect {
-
     private final Map<String, SlidingWindow> limiters = new ConcurrentHashMap<>();
 
     @Around("@annotation(rateLimit)")
