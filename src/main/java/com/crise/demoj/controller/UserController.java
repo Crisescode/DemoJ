@@ -6,6 +6,7 @@ import com.crise.demoj.dto.api.CommonPage;
 import com.crise.demoj.dto.api.CommonResult;
 import com.crise.demoj.dto.api.ResultCode;
 import com.crise.demoj.exception.UserException;
+import com.crise.demoj.service.PermissionService;
 import com.crise.demoj.utils.JwtTokenUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.crise.demoj.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,9 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PermissionService permissionService;
 
     @Autowired
     private JwtTokenUtils jwtTokenUtils;
@@ -62,6 +67,14 @@ public class UserController {
         response.put("message", tokens.get("message"));
 
         return CommonResult.success(response);
+    }
+
+    @Operation(summary = "获取当前用户菜单")
+    @GetMapping("/menus")
+    public CommonResult<List<MenuNodeDto>> getMenus(HttpServletRequest request) {
+        UserInfoDto user = (UserInfoDto) request.getAttribute("userInfo");
+        List<MenuNodeDto> menus = permissionService.getUserMenus(user.getId());
+        return CommonResult.success(menus);
     }
 
     @Operation(summary = "查询用户信息")

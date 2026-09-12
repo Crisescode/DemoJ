@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crise.demoj.dao.entity.PermissionEntity;
 import com.crise.demoj.dao.mapper.PermissionMapper;
 import com.crise.demoj.dao.mapper.RolePermissionRelationMapper;
+import com.crise.demoj.dto.MenuNodeDto;
 import com.crise.demoj.dto.PermissionInfoDto;
 import com.crise.demoj.dto.api.CommonPage;
 import com.crise.demoj.exception.UserException;
@@ -16,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,10 +31,12 @@ public class PermissionService {
 
     public PermissionInfoDto create(PermissionEntity entity) {
         entity.setCreateTime(LocalDateTime.now());
+        entity.setUpdateTime(LocalDateTime.now());
         if (entity.getParentId() == null) entity.setParentId(0L);
         if (entity.getSort() == null) entity.setSort(0);
         if (entity.getStatus() == null) entity.setStatus(1);
         permissionMapper.insert(entity);
+
         return toDto(entity);
     }
 
@@ -110,6 +112,62 @@ public class PermissionService {
     public List<PermissionInfoDto> getByUserId(Long userId) {
         List<PermissionEntity> entities = permissionMapper.getByUserId(userId);
         return entities.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    private static final Map<String, String> URL_TO_ROUTE = new LinkedHashMap<>();
+    static {
+        URL_TO_ROUTE.put("/admin/**", "/users");
+        URL_TO_ROUTE.put("/role/**", "/roles");
+        URL_TO_ROUTE.put("/permission/**", "/permissions");
+        URL_TO_ROUTE.put("/cache/**", "/cache");
+    }
+
+    public List<MenuNodeDto> getUserMenus(Long userId) {
+        List<PermissionInfoDto> permissions = getByUserId(userId);
+        List<PermissionInfoDto> menuPerms = permissions.stream()
+                .filter(p -> p.getType() != null && (p.getType() == 0 || p.getType() == 1))
+                .collect(Collectors.toList());
+
+        List<MenuNodeDto> rootNodes = new ArrayList<>();
+        for (PermissionInfoDto perm : menuPerms) {
+            if (perm.getParentId() != null && perm.getParentId() == 0) {
+                MenuNodeDto node = buildMenuNode(perm, menuPerms);
+                rootNodes.add(node);
+            }
+        }
+
+        MenuNodeDto dashboard = new MenuNodeDto();
+        dashboard.setId(0L);
+        dashboard.setName("控制台");
+        dashboard.setPath("/dashboard");
+        dashboard.setIcon("DashboardOutlined");
+        dashboard.setSort(0);
+        dashboard.setType(0);
+
+        List<MenuNodeDto> result = new ArrayList<>();
+        result.add(dashboard);
+        result.addAll(rootNodes);
+        result.sort(Comparator.comparing(m -> m.getSort() != null ? m.getSort() : 999));
+        return result;
+    }
+
+    private MenuNodeDto buildMenuNode(PermissionInfoDto perm, List<PermissionInfoDto> all) {
+        MenuNodeDto node = new MenuNodeDto();
+        node.setId(perm.getId());
+        node.setName(perm.getName());
+        node.setIcon(perm.getIcon());
+        node.setSort(perm.getSort());
+        node.setType(perm.getType());
+        node.setPath(URL_TO_ROUTE.getOrDefault(perm.getUrl(), "/dashboard"));
+
+        List<MenuNodeDto> children = all.stream()
+                .filter(p -> p.getParentId() != null && p.getParentId().equals(perm.getId()))
+                .map(p -> buildMenuNode(p, all))
+                .sorted(Comparator.comparing(m -> m.getSort() != null ? m.getSort() : 999))
+                .collect(Collectors.toList());
+        node.setChildren(children);
+
+        return node;
     }
 
     private PermissionInfoDto toDto(PermissionEntity entity) {

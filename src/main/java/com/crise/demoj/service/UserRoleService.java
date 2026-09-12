@@ -57,6 +57,7 @@ public class UserRoleService {
 
         UserRoleInfoDto result = new UserRoleInfoDto();
         BeanUtils.copyProperties(entity, result);
+        result.setAdminCount(userRoleMapService.getUserIdsByRoleId(id).size());
 
         return result;
     }
@@ -112,6 +113,7 @@ public class UserRoleService {
         for (UserRoleEntity entity : userRoleEntityList) {
             UserRoleInfoDto dto = new UserRoleInfoDto();
             BeanUtils.copyProperties(entity, dto);
+            dto.setAdminCount(userRoleMapService.getUserIdsByRoleId(entity.getId()).size());
             result.add(dto);
         }
         return result;
@@ -120,15 +122,20 @@ public class UserRoleService {
     public CommonPage<UserRoleInfoDto> list(UserRoleListRequestDto req) {
         Page<UserRoleEntity> page = new Page<>(req.getPageNum(), req.getPageSize());
 
-        IPage<UserRoleEntity> userRolePage = userRoleMapper.selectPage(page,
-                new QueryWrapper<UserRoleEntity>().eq("is_active", 1).like("name", req.getKeyword())
-        );
+        QueryWrapper<UserRoleEntity> wrapper = new QueryWrapper<UserRoleEntity>()
+                .eq("is_active", 1);
+        if (req.getKeyword() != null && !req.getKeyword().isEmpty()) {
+            wrapper.like("name", req.getKeyword());
+        }
+
+        IPage<UserRoleEntity> userRolePage = userRoleMapper.selectPage(page, wrapper);
 
         List<UserRoleEntity> userRoles = userRolePage.getRecords();
         List<UserRoleInfoDto> userRoleInfos = new ArrayList<>();
         for(UserRoleEntity userRole : userRoles) {
             UserRoleInfoDto dto = new UserRoleInfoDto();
             BeanUtils.copyProperties(userRole, dto);
+            dto.setAdminCount(userRoleMapService.getUserIdsByRoleId(userRole.getId()).size());
             userRoleInfos.add(dto);
         }
 

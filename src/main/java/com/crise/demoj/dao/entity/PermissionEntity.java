@@ -32,5 +32,8 @@ public class PermissionEntity {
     @TableField("create_time")
     private LocalDateTime createTime;
 
+    @TableField("update_time")
+    private LocalDateTime updateTime;
+
     private Integer status;
 }

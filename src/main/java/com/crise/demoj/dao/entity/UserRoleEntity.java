@@ -23,7 +23,7 @@ public class UserRoleEntity {
     private Integer adminCount;
 
     @TableField("status")
-    private String status;
+    private Integer status;
 
     @TableField("sort")
     private Integer sort;

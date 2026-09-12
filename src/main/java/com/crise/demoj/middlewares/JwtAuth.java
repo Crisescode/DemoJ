@@ -73,7 +73,12 @@ public class JwtAuth implements HandlerInterceptor {
         // 5. 将用户信息放入 request 中，供后续使用
         request.setAttribute("userInfo", user);
 
-        // 6. 权限校验：加载用户的所有权限，检查当前请求是否匹配
+        // 6. 菜单接口跳过权限校验，由接口内部根据用户权限过滤
+        if ("/admin/menus".equals(requestURI)) {
+            return true;
+        }
+
+        // 7. 权限校验：加载用户的所有权限，检查当前请求是否匹配
         List<PermissionInfoDto> permissions = permissionService.getByUserId(user.getId());
 
         boolean hasPermission = false;

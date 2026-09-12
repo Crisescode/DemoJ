@@ -10,7 +10,7 @@ public class UserRoleInfoDto {
     private Long id;
     private String name;
     private String description;
-    private String status;
+    private Integer status;
 
     @JsonProperty("admin_count")
     private Integer adminCount;

@@ -3,32 +3,33 @@
 -- =====================================================
 
 -- 1. 先确保权限表已有基础数据（如果没执行过 migration_v2.sql）
-INSERT IGNORE INTO ums_permission (id, name, description, url, method, parent_id, type, sort, create_time, status) VALUES
-(1,  '用户管理',    '用户管理模块',   '/admin/**',          '',    0, 0, 1, NOW(), 1),
-(2,  '查询用户',    '查询用户信息',   '/admin/info',        'POST', 1, 2, 1, NOW(), 1),
-(3,  '用户列表',    '用户列表分页',   '/admin/list',        'POST', 1, 2, 2, NOW(), 1),
-(4,  '更新用户',    '更新用户信息',   '/admin/update',      'POST', 1, 2, 3, NOW(), 1),
-(5,  '删除用户',    '删除用户',       '/admin/delete',      'POST', 1, 2, 4, NOW(), 1),
-(6,  '分配角色',    '给用户分配角色', '/admin/role/update', 'POST', 1, 2, 5, NOW(), 1),
-(7,  '查看角色',    '查看用户角色',   '/admin/role/*',      'GET',  1, 2, 6, NOW(), 1),
-(8,  '角色管理',    '角色管理模块',   '/role/**',           '',    0, 0, 2, NOW(), 1),
-(9,  '创建角色',    '创建角色',       '/role/create',       'POST', 8, 2, 1, NOW(), 1),
-(10, '查询角色',    '查询角色',       '/role/get',          'POST', 8, 2, 2, NOW(), 1),
-(11, '修改角色',    '修改角色',       '/role/update',       'POST', 8, 2, 3, NOW(), 1),
-(12, '删除角色',    '删除角色',       '/role/delete',       'POST', 8, 2, 4, NOW(), 1),
-(13, '角色列表',    '角色列表分页',   '/role/list',         'POST', 8, 2, 5, NOW(), 1),
-(14, '所有角色',    '获取所有角色',   '/role/listAll',      'POST', 8, 2, 6, NOW(), 1),
-(15, '批量删除角色','批量删除角色',   '/role/deleteAll',    'POST', 8, 2, 7, NOW(), 1),
-(16, '权限管理',    '权限管理模块',   '/permission/**',     '',    0, 0, 3, NOW(), 1),
+INSERT IGNORE INTO ums_permission (id, name, description, url, method, parent_id, type, icon, sort, create_time, status) VALUES
+(1,  '用户管理',    '用户管理模块',   '/admin/**',          '',    0, 0, 'UserOutlined', 1, NOW(), 1),
+(2,  '查询用户',    '查询用户信息',   '/admin/info',        'POST', 1, 2, '', 1, NOW(), 1),
+(3,  '用户列表',    '用户列表分页',   '/admin/list',        'POST', 1, 2, '', 2, NOW(), 1),
+(4,  '更新用户',    '更新用户信息',   '/admin/update',      'POST', 1, 2, '', 3, NOW(), 1),
+(5,  '删除用户',    '删除用户',       '/admin/delete',      'POST', 1, 2, '', 4, NOW(), 1),
+(6,  '分配角色',    '给用户分配角色', '/admin/role/update', 'POST', 1, 2, '', 5, NOW(), 1),
+(7,  '查看角色',    '查看用户角色',   '/admin/role/*',      'GET',  1, 2, '', 6, NOW(), 1),
+(8,  '角色管理',    '角色管理模块',   '/role/**',           '',    0, 0, 'TeamOutlined', 2, NOW(), 1),
+(9,  '创建角色',    '创建角色',       '/role/create',       'POST', 8, 2, '', 1, NOW(), 1),
+(10, '查询角色',    '查询角色',       '/role/get',          'POST', 8, 2, '', 2, NOW(), 1),
+(11, '修改角色',    '修改角色',       '/role/update',       'POST', 8, 2, '', 3, NOW(), 1),
+(12, '删除角色',    '删除角色',       '/role/delete',       'POST', 8, 2, '', 4, NOW(), 1),
+(13, '角色列表',    '角色列表分页',   '/role/list',         'POST', 8, 2, '', 5, NOW(), 1),
+(14, '所有角色',    '获取所有角色',   '/role/listAll',      'POST', 8, 2, '', 6, NOW(), 1),
+(15, '批量删除角色','批量删除角色',   '/role/deleteAll',    'POST', 8, 2, '', 7, NOW(), 1),
+(16, '权限管理',    '权限管理模块',   '/permission/**',     '',    0, 0, 'SafetyOutlined', 3, NOW(), 1),
 -- 补全权限管理的子权限
-(17, '创建权限',    '创建权限',       '/permission/create',           'POST', 16, 2, 1, NOW(), 1),
-(18, '修改权限',    '修改权限',       '/permission/update',           'POST', 16, 2, 2, NOW(), 1),
-(19, '删除权限',    '删除权限',       '/permission/delete',           'POST', 16, 2, 3, NOW(), 1),
-(20, '查询权限',    '查询权限详情',   '/permission/get',              'POST', 16, 2, 4, NOW(), 1),
-(21, '权限列表',    '权限列表分页',   '/permission/list',             'POST', 16, 2, 5, NOW(), 1),
-(22, '所有权限',    '获取所有权限',   '/permission/listAll',          'POST', 16, 2, 6, NOW(), 1),
-(23, '分配权限',    '给角色分配权限', '/permission/assign',           'POST', 16, 2, 7, NOW(), 1),
-(24, '角色权限ID',  '获取角色权限ID', '/permission/rolePermissionIds', 'POST', 16, 2, 8, NOW(), 1);
+(17, '创建权限',    '创建权限',       '/permission/create',           'POST', 16, 2, '', 1, NOW(), 1),
+(18, '修改权限',    '修改权限',       '/permission/update',           'POST', 16, 2, '', 2, NOW(), 1),
+(19, '删除权限',    '删除权限',       '/permission/delete',           'POST', 16, 2, '', 3, NOW(), 1),
+(20, '查询权限',    '查询权限详情',   '/permission/get',              'POST', 16, 2, '', 4, NOW(), 1),
+(21, '权限列表',    '权限列表分页',   '/permission/list',             'POST', 16, 2, '', 5, NOW(), 1),
+(22, '所有权限',    '获取所有权限',   '/permission/listAll',          'POST', 16, 2, '', 6, NOW(), 1),
+(23, '分配权限',    '给角色分配权限', '/permission/assign',           'POST', 16, 2, '', 7, NOW(), 1),
+(24, '角色权限ID',  '获取角色权限ID', '/permission/rolePermissionIds','POST', 16, 2, '', 8, NOW(), 1),
+(25, '缓存监控',    'Redis缓存监控',  '/cache/**',          '',    0, 0, 'DatabaseOutlined', 4, NOW(), 1);
 
 -- 2. 创建管理员角色
 INSERT INTO ums_role (id, name, description, admin_count, create_time, status, sort, is_active)

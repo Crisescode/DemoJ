@@ -50,20 +50,20 @@ create table ums_operation_log
 );
 
 -- 4. 初始化基础权限数据
-INSERT INTO ums_permission (name, description, url, method, parent_id, type, sort, create_time, status) VALUES
-('用户管理', '用户管理模块', '/admin/**', '', 0, 0, 1, NOW(), 1),
-('查询用户', '查询用户信息', '/admin/info', 'POST', 1, 2, 1, NOW(), 1),
-('用户列表', '用户列表分页', '/admin/list', 'POST', 1, 2, 2, NOW(), 1),
-('更新用户', '更新用户信息', '/admin/update', 'POST', 1, 2, 3, NOW(), 1),
-('删除用户', '删除用户', '/admin/delete', 'POST', 1, 2, 4, NOW(), 1),
-('分配角色', '给用户分配角色', '/admin/role/update', 'POST', 1, 2, 5, NOW(), 1),
-('查看角色', '查看用户角色', '/admin/role/*', 'GET', 1, 2, 6, NOW(), 1),
-('角色管理', '角色管理模块', '/role/**', '', 0, 0, 2, NOW(), 1),
-('创建角色', '创建角色', '/role/create', 'POST', 8, 2, 1, NOW(), 1),
-('查询角色', '查询角色', '/role/get', 'POST', 8, 2, 2, NOW(), 1),
-('修改角色', '修改角色', '/role/update', 'POST', 8, 2, 3, NOW(), 1),
-('删除角色', '删除角色', '/role/delete', 'POST', 8, 2, 4, NOW(), 1),
-('角色列表', '角色列表分页', '/role/list', 'POST', 8, 2, 5, NOW(), 1),
-('所有角色', '获取所有角色', '/role/listAll', 'POST', 8, 2, 6, NOW(), 1),
-('批量删除角色', '批量删除角色', '/role/deleteAll', 'POST', 8, 2, 7, NOW(), 1),
-('权限管理', '权限管理模块', '/permission/**', '', 0, 0, 3, NOW(), 1);
+INSERT INTO ums_permission (name, description, url, method, parent_id, type, icon, sort, create_time, status) VALUES
+('用户管理', '用户管理模块', '/admin/**', '', 0, 0, 'UserOutlined', 1, NOW(), 1),
+('查询用户', '查询用户信息', '/admin/info', 'POST', 1, 2, '', 1, NOW(), 1),
+('用户列表', '用户列表分页', '/admin/list', 'POST', 1, 2, '', 2, NOW(), 1),
+('更新用户', '更新用户信息', '/admin/update', 'POST', 1, 2, '', 3, NOW(), 1),
+('删除用户', '删除用户', '/admin/delete', 'POST', 1, 2, '', 4, NOW(), 1),
+('分配角色', '给用户分配角色', '/admin/role/update', 'POST', 1, 2, '', 5, NOW(), 1),
+('查看角色', '查看用户角色', '/admin/role/*', 'GET', 1, 2, '', 6, NOW(), 1),
+('角色管理', '角色管理模块', '/role/**', '', 0, 0, 'TeamOutlined', 2, NOW(), 1),
+('创建角色', '创建角色', '/role/create', 'POST', 8, 2, '', 1, NOW(), 1),
+('查询角色', '查询角色', '/role/get', 'POST', 8, 2, '', 2, NOW(), 1),
+('修改角色', '修改角色', '/role/update', 'POST', 8, 2, '', 3, NOW(), 1),
+('删除角色', '删除角色', '/role/delete', 'POST', 8, 2, '', 4, NOW(), 1),
+('角色列表', '角色列表分页', '/role/list', 'POST', 8, 2, '', 5, NOW(), 1),
+('所有角色', '获取所有角色', '/role/listAll', 'POST', 8, 2, '', 6, NOW(), 1),
+('批量删除角色', '批量删除角色', '/role/deleteAll', 'POST', 8, 2, '', 7, NOW(), 1),
+('权限管理', '权限管理模块', '/permission/**', '', 0, 0, 'SafetyOutlined', 3, NOW(), 1);
