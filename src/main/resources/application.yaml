@@ -1,10 +1,23 @@
 spring:
   # 数据库基础配置（核心）
   datasource:
-    url: jdbc:mysql://10.131.1.221:3306/demodb?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://10.131.1.220:13306/demodb?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     username: demo_user       # 你的数据库账号
     password: 123456     # 你的数据库密码
     driver-class-name: com.mysql.cj.jdbc.Driver
+  # Redis 配置
+  redis:
+    host: 10.131.1.220
+    port: 6379
+    password:
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
 
 mybatis-plus:
   configuration:
@@ -17,19 +30,6 @@ mybatis-plus:
     db-config:
       # 数据库配置
       id-type: auto
-
-  redis:
-    host: 10.131.1.221
-    port: 6379
-    password:
-    database: 0
-    timeout: 3000ms
-    lettuce:
-      pool:
-        max-active: 8
-        max-idle: 8
-        min-idle: 0
-        max-wait: -1ms
 
 jwt:
   secret: 123456
